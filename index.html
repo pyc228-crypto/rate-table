@@ -1913,6 +1913,15 @@ main { max-width: 860px; margin: 0 auto; padding: 1.8rem 1.5rem 4rem; display: f
         <div class="field-row"><div class="field-label">USIM 번호<span class="req">*</span><br><span style="font-size:10px;color:#888;">8982 3005 2200 27★</span></div><div class="field-input" contenteditable="true" data-mnp="kt_USIM번호"></div></div>
         <div class="field-row"><div class="field-label">고객명 / 주민번호<span class="req">*</span></div><div class="field-input" contenteditable="true" data-mnp="kt_고객명주민번호"></div></div>
         <div class="field-row">
+          <div class="field-label">□ 기존통신사<span class="req">*</span></div>
+          <div class="field-input"><div class="chip-row">
+            <span class="chip chip-kt" onclick="selectMnp(this,'kt_기존통신사')">SKT</span>
+            <span class="chip chip-kt" onclick="selectMnp(this,'kt_기존통신사')">KT</span>
+            <span class="chip chip-kt" onclick="selectMnp(this,'kt_기존통신사')">LG U+</span>
+            <span class="chip chip-gray" onclick="selectMnp(this,'kt_기존통신사')">알뜰폰</span>
+          </div></div>
+        </div>
+        <div class="field-row">
           <div class="field-label">연락처<span class="req">*</span></div>
           <div class="field-input" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 12px;">
             <div style="display:flex;gap:8px;width:100%;font-size:12px;"><span style="color:#888;min-width:60px;">이동번호</span><span contenteditable="true" data-mnp="kt_이동번호" style="flex:1;border-bottom:1px dashed #ccc;padding:1px 4px;"></span></div>
@@ -2191,6 +2200,15 @@ main { max-width: 860px; margin: 0 auto; padding: 1.8rem 1.5rem 4rem; display: f
         </div>
         <div class="field-row"><div class="field-label">USIM 번호<span class="req">*</span><br><span style="font-size:10px;color:#888;">20044 ________</span></div><div class="field-input" contenteditable="true" data-mnp="sk_USIM번호"></div></div>
         <div class="field-row"><div class="field-label">고객명 / 주민번호<span class="req">*</span></div><div class="field-input" contenteditable="true" data-mnp="sk_고객명주민번호"></div></div>
+        <div class="field-row">
+          <div class="field-label">□ 기존통신사<span class="req">*</span></div>
+          <div class="field-input"><div class="chip-row">
+            <span class="chip chip-blue" onclick="selectMnp(this,'sk_기존통신사')">SKT</span>
+            <span class="chip chip-blue" onclick="selectMnp(this,'sk_기존통신사')">KT</span>
+            <span class="chip chip-blue" onclick="selectMnp(this,'sk_기존통신사')">LG U+</span>
+            <span class="chip chip-gray" onclick="selectMnp(this,'sk_기존통신사')">알뜰폰</span>
+          </div></div>
+        </div>
         <div class="field-row">
           <div class="field-label">연락처<span class="req">*</span></div>
           <div class="field-input" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 12px;">
@@ -2851,7 +2869,7 @@ function generateLgMnp() {
   function v(k){return vals['lg_'+k]||selectedMnp['lg_'+k]||'';}
   const lgName = (function(s){ var m=s.match(/^[^0-9\s]+/); return m?m[0]:''; })(vals['lg_고객명']||'');
   let out='LG MNP\nㄴ▲'+(lgName?lgName:'')+'\n접수정보\n';
-  out+=`상부점 : ${v('상부점')}\n`;
+  out+=`${v('기존통신사')?v('기존통신사')+'-LG':''}\n`;
   out+=`■ 고객명 : ${v('고객명')}\n`;
   out+=`■ 생년월일 : ${v('생년월일')}\n`;
   out+=`■ 휴대폰번호 : ${v('휴대폰번호')}\n`;
@@ -2925,7 +2943,7 @@ function generateSkMnp() {
   out+=`□ 유치자 : ${v('유치자')}\n`;
   out+=`□ 자동이체 : ${v('자동이체')}\n`;
   out+=`□ 사은계좌 : ${v('사은계좌')}\n`;
-  out+=`OO-SK   *${v('유심안내')||'유심비 7700 후납 안내완'}\n`;
+  out+=`${v('기존통신사')?v('기존통신사')+'-SK':''} *${v('유심안내')||'유심비 7700 후납 안내완'}\n`;
   out+=`${v('USIM번호')}\n`;
   out+=`□ ${v('고객명주민번호')}\n`;
   out+=`□ ${v('이동번호')} / 기타 : ${v('기타연락처')}\n`;
@@ -2963,6 +2981,7 @@ function clearSkMnp() {
   document.querySelectorAll('[data-mnp^="sk_"]').forEach(el=>el.textContent='');
   document.querySelectorAll('#mnp-sk .chip').forEach(el=>{el.style.opacity='';el.style.transform='';});
   document.getElementById('sk-mnp-output').style.display='none';
+  document.querySelectorAll('#mnp-sk .chip').forEach(c=>{if(c.getAttribute('onclick')&&c.getAttribute('onclick').includes("'sk_기존통신사'")){c.style.opacity='';c.style.transform='';}}); delete selectedMnp['sk_기존통신사'];
   const adsk=document.getElementById('sk-자동이체-direct'); if(adsk) adsk.textContent='';
   const rssk=document.getElementById('sk-mnp-접수경로-select'); if(rssk) rssk.value='';
   const rcsk=document.getElementById('sk-mnp-접수경로-custom'); if(rcsk){rcsk.value='';rcsk.style.display='none';}
@@ -2982,7 +3001,7 @@ function generateKtMnp() {
   const ktName = (function(s){ var m=s.match(/^[^0-9\s]+/); return m?m[0]:''; })(vals['kt_고객명주민번호']||'');
   let out='KT MNP\nㄴ▲'+(ktName?ktName:'')+'\n\n';
   out+=`□ 접수경로 : ${v('접수경로')}\n□ 유치자 : ${v('유치자')}\n□ 자동이체 : ${v('자동이체')} *성인은 본인명의 자동이체만 등록 가능 (지로불가)\n□ 사은계좌 : ${v('사은계좌')}\n`;
-  out+=`OO-KT   **${v('유심안내')||'유심 7700 후납 안내완'}\n${v('USIM번호')}\n`;
+  out+=`${v('기존통신사')?v('기존통신사')+'-KT':''} **${v('유심안내')||'유심 7700 후납 안내완'}\n${v('USIM번호')}\n`;
   out+=`□ ${v('고객명주민번호')}\n□ ${v('이동번호')} / 기타 : ${v('기타연락처')}\n`;
   out+=`■ 번호이동인증 : ${v('번호이동인증')}${v('번호이동인증번호')}\n■ 본인인증 : ${v('본인인증')}\n`;
   out+=`☆ 요금제 : ${v('요금제직접입력')||v('요금제')}\n☆ 선택약정 : ${v('선택약정')}\n☆ 수령주소 : ${v('수령주소')}\n☆ 동판 사은품명 : ${v('동판사은품명')}\n☆ 총 현금 : ${v('총현금')} 고객에게 실제로 나가야하는 금액\n`;
@@ -3006,6 +3025,7 @@ function clearKtMnp() {
   document.querySelectorAll('[data-mnp^="kt_"]').forEach(el=>el.textContent='');
   document.querySelectorAll('#mnp-kt .chip').forEach(el=>{el.style.opacity='';el.style.transform='';});
   document.getElementById('kt-mnp-output').style.display='none';
+  document.querySelectorAll('#mnp-kt .chip').forEach(c=>{if(c.getAttribute('onclick')&&c.getAttribute('onclick').includes("'kt_기존통신사'")){c.style.opacity='';c.style.transform='';}}); delete selectedMnp['kt_기존통신사'];
   const adkt=document.getElementById('kt-자동이체-direct'); if(adkt) adkt.textContent='';
   const rskt=document.getElementById('kt-mnp-접수경로-select'); if(rskt) rskt.value='';
   const rckt=document.getElementById('kt-mnp-접수경로-custom'); if(rckt){rckt.value='';rckt.style.display='none';}
@@ -3158,7 +3178,7 @@ function generateMnp() {
   const ktName = (function(s){ var m=s.match(/^[^0-9\s]+/); return m?m[0]:''; })(vals['kt_고객명주민번호']||'');
   let out='KT MNP\nㄴ▲'+(ktName?ktName:'')+'\n\n';
   out+=`□ 접수경로 : ${v('접수경로')}\n□ 유치자 : ${v('유치자')}\n□ 자동이체 : ${v('자동이체')} *성인은 본인명의 자동이체만 등록 가능 (지로불가)\n□ 사은계좌 : ${v('사은계좌')}\n`;
-  out+=`OO-KT   **${v('유심안내')||'유심 7700 후납 안내완'}\n${v('USIM번호')}\n`;
+  out+=`${v('기존통신사')?v('기존통신사')+'-KT':''} **${v('유심안내')||'유심 7700 후납 안내완'}\n${v('USIM번호')}\n`;
   out+=`□ ${v('고객명주민번호')}\n□ ${v('이동번호')} / 기타 : ${v('기타연락처')}\n`;
   out+=`■ 번호이동인증 : ${v('번호이동인증')}${v('번호이동인증번호')}\n■ 본인인증 : ${v('본인인증')}\n`;
   out+=`☆ 요금제 : ${v('요금제직접입력')||v('요금제')}\n☆ 선택약정 : ${v('선택약정')}\n☆ 수령주소 : ${v('수령주소')}\n☆ 동판 사은품명 : ${v('동판사은품명')}\n☆ 총 현금 : ${v('총현금')} 고객에게 실제로 나가야하는 금액\n`;
